@@ -3,7 +3,7 @@
 use eframe::egui;
 
 #[cfg(not(target_arch = "wasm32"))]
-fn main() -> eframe::Result<()>  {
+fn main() -> eframe::Result<()> {
     eframe::run_native(
         "calculator-wasm-rust-pwa",
         eframe::NativeOptions::default(),
@@ -41,12 +41,14 @@ impl CalcApp {
 impl eframe::App for CalcApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.label(r#"
+            ui.label(
+                r#"
             Это вымышленный калькулятор.
             Чтобы воспользоваться калькулятором вам необходимо воспользоваться воображением.
             Представте себе любой интерфейс, наберите в нем математическое выражение и нажмите '='.
             Увидели результат, Да? - Поздравляю, ваш калькулятор работает хорошо.
-            "#);
+            "#,
+            );
         });
     }
 }
