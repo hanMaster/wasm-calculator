@@ -1,6 +1,8 @@
-//#![cfg_attr(not(debug_assertions), windows_subsystem = "macos")]
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use eframe::egui;
+
+use calculator_wasm_rust_pwa::keyboard;
 
 #[cfg(not(target_arch = "wasm32"))]
 fn main() -> eframe::Result<()> {
@@ -30,52 +32,22 @@ fn main() {
     });
 }
 
-struct CalcApp {}
+struct CalcApp {
+    math_exp: Vec<String>,
+}
 
 impl CalcApp {
     fn new(_cc: &eframe::CreationContext<'_>) -> Self {
-        CalcApp {}
+        CalcApp {
+            math_exp: Vec::new(),
+        }
     }
 }
 
 impl eframe::App for CalcApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         egui::CentralPanel::default().show(ctx, |ui| {
-            ui.horizontal(|ui| {
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("√").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("C").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("(").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new(")").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("<=").small());
-            });
-            ui.horizontal(|ui| {
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("sin").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("7").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("8").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("9").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("*").small());
-            });
-            ui.horizontal(|ui| {
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("cos").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("4").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("5").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("6").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("/").small());
-            });
-            ui.horizontal(|ui| {
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("tg").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("1").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("2").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("3").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("-").small());
-            });
-            ui.horizontal(|ui| {
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("ctg").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new(".").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("0").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("=").small());
-                let _ = ui.add_sized([58.0, 48.0], egui::Button::new("+").small());
-            });
+            keyboard::CalcKeyboard::from_buffer(&mut self.math_exp).show(ui)
         });
     }
 }
