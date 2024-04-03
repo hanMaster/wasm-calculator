@@ -1,6 +1,8 @@
 use eframe::egui;
 use eframe::egui::Widget;
 
+use crate::math_exp;
+
 pub struct CustomKey {
     pub text: String,
     pub width: f32,
@@ -14,11 +16,6 @@ impl CustomKey {
             text: text.into(),
             ..Default::default()
         }
-    }
-    /// Задать размер кнопке.
-    fn set_size(mut self, width: f32, height: f32) {
-        self.width = width;
-        self.height = height;
     }
 }
 
@@ -70,13 +67,13 @@ static KEYS: [(&str, &str); 25] = [
     ("+", "+"),
 ];
 pub struct CalcKeyboard<'a> {
-    buffer: &'a mut Vec<String>,
+    buffer: &'a mut math_exp::MathExp,
     pub width: f32,
     pub height: f32,
 }
 
 impl<'a> CalcKeyboard<'a> {
-    pub fn from_buffer(buffer: &'a mut Vec<String>) -> Self {
+    pub fn from_buffer(buffer: &'a mut math_exp::MathExp) -> Self {
         Self {
             buffer,
             width: 340.0,
@@ -84,12 +81,12 @@ impl<'a> CalcKeyboard<'a> {
         }
     }
 
-    pub fn show(mut self, ui: &mut egui::Ui) {
+    pub fn show(self, ui: &mut egui::Ui) {
         egui::Grid::new("keyboard")
             .num_columns(5)
             .max_col_width(self.width)
             .show(ui, |ui| {
-                for (ind, (title, val)) in KEYS.iter().enumerate() {
+                for (ind, (title, _)) in KEYS.iter().enumerate() {
                     if ind % 5 == 0 && ind != 0 {
                         ui.end_row();
                     }
@@ -101,12 +98,13 @@ impl<'a> CalcKeyboard<'a> {
                             "<=" => {
                                 self.buffer.pop();
                             }
+                            "=" => {
+                                self.buffer.calculate();
+                            }
                             _ => {
-                                self.buffer.push(val.to_string());
+                                self.buffer.add(title);
                             }
                         }
-                        // TODO Далее мы это удалим.
-                        println!("{:?}", self.buffer)
                     };
                 }
             });
